@@ -579,7 +579,7 @@ función del largo del OD medido en sílabas.
 
 ## Ejercitación
 
- 1. El dataset en <https://tinyurl.com/y4dl43ea> contiene información sobre el
+ 1. El dataset en <https://tinyurl.com/y3vd3x3g> contiene información sobre el
     orden de sujeto, verbo y objeto de distintas lenguas y de la familia
     lingüística a la que pertenecen. Querés investigar cómo este orden se ve
     influido por la familia lingüística. Creá un dataset que contenga esta
