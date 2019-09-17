@@ -1,0 +1,1820 @@
+\documentclass[12pt,spanish,a4paper,]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\hypersetup{unicode=true,
+            pdftitle={Diseño y lógica de los estudios cuantitativos (versión Python)},
+            pdfauthor={Santiago Gualchi},
+            colorlinks=true,
+            linkcolor=Maroon,
+            citecolor=Blue,
+            urlcolor=Blue,
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[main=spanish]{babel}
+\else
+  \usepackage{polyglossia}
+  \setmainlanguage[]{spanish}
+\fi
+\usepackage{longtable,booktabs}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\usepackage[normalem]{ulem}
+% avoid problems with \sout in headers with hyperref:
+\pdfstringdefDisableCommands{\renewcommand{\sout}{}}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Diseño y lógica de los estudios cuantitativos (versión Python)}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Santiago Gualchi}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{21 de septiembre de 2019}
+
+
+\begin{document}
+\maketitle
+
+\hypertarget{introduccion}{%
+\section{Introducción}\label{introduccion}}
+
+En la
+\href{https://drive.google.com/file/d/1vRmq8vyfwkgANQznM2oPuzhorcoIaSkZ/view?usp=sharing}{clase
+pasada}, realizamos una aproximación a la estadística y discutimos su
+relevancia a la hora de estudiar el lenguaje. Señalamos la conocida
+problemática de que, si bien los estudios cuantitativos están cada vez
+más presentes en la investigación lingüística, en nuestro país (y, en
+particular, en nuestra universidad), los planes de estudio excluyen la
+estadística de la formación del lingüista. Esto supone un grave problema
+para quienes nos formamos en el área en tanto que el desconocimiento de
+los métodos usados actualmente en investigación amenaza con dejarnos
+fuera del debate científico (no poder publicar, no poder leer).
+
+A su vez, mencionamos que la estadística es la disciplina que se ocupa
+de todas las etapas que involucran a los datos, incluyendo el diseño
+previo a su recolección, su análisis e interpretación, y su
+comunicación. En esta línea, introdujimos también una serie de
+conceptos, entre ellos: población, muestra, variable, hipótesis, espacio
+muestral y probabilidad.
+
+Asimismo, establecimos la diferencia entre estadística descriptiva y
+estadística inferencial. La primera se refiere al conjunto de técnicas
+matemáticas que se limitan a describir las propiedades de la muestra
+estudiada. La segunda alude a las pruebas que permiten generalizar las
+observaciones sobre la muestra a la población relevante.
+
+Finalmente, discutimos distintas áreas donde el uso de modelos
+estadísticos puede ayudarnos a entender y a explicar mejor los fenómenos
+que estudiamos. Entre los campos señalados incluimos (sin ser
+exhaustivos) la psicolingüística y la neurolingüística, la lingüística
+de corpus, la lingüística computacional, la tipología y la lingüística
+histórica, y la teoría lingüística.
+
+En esta reunión, vamos a avanzar sobre las líneas propuestas en el
+encuentro anterior. Nos vamos a concentrar en las etapas de diseño de
+una investigación para lo cual vamos a profundizar algunos de los
+conceptos que ya introdujimos. Vamos a centrarnos en las hipótesis y
+variables, y a estudiar sus propiedades y las repercusiones que traen
+las distintas formas de operacionalizarlas. Vamos a explicar cómo
+recolectar los datos de forma rigurosa y cuáles son los buenos hábitos
+para su almacenamiento. Por último, vamos a introducir la forma de
+proceder para la aceptación (o no) de nuestras hipótesis y por qué se
+realiza de este modo.
+
+\hypertarget{ejercitacion}{%
+\subsection{Ejercitación}\label{ejercitacion}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Antes de avanzar, escribí definiciones para los siguientes conceptos:
+  hipótesis, variable y operacionalización. No te preocupes si algunas
+  de estas nociones te resultan muy nuevas. Está bien si las definís
+  como te salga.
+\item
+  ¿Cómo caracterizarías los procesos de recolección y almacenamiento de
+  datos? ¿Qué cuidados tendrías a la hora de llevarlos a cabo?
+\item
+  ¿Cómo pensás que podemos hacer para saber si nuestra hipótesis es
+  correcta o incorrecta?
+\end{enumerate}
+
+\hypertarget{preparacion-del-directorio-de-trabajo}{%
+\section{Preparación del directorio de
+trabajo}\label{preparacion-del-directorio-de-trabajo}}
+
+Cuando llevamos a cabo una investigación cuantitativa, trabajamos con
+datos. Casi siempre estos datos son muy numerosos y necesitan ser
+analizados con tests estadísticos que pueden involucrar un también muy
+alto número de operaciones matemáticas. Por esta razón, hoy resulta
+prácticamente imprescindible hacer uso de un software de análisis
+estadístico (e.g., SPSS, SAS, Stata) o, mejor todavía, un lenguaje de
+programación con buen soporte estadístico (e.g., R, Python, Julia). Para
+mantener el espacio de trabajo organizado, facilitar la comprensión y
+reproducibilidad y evitar errores prevenibles, es importante mantener
+una buena estructuración de nuestro directorio. Existen distintas
+prácticas sugeridas. A continuación voy a resumir las
+\href{https://drivendata.github.io/cookiecutter-data-science/}{recomendaciones
+desarrolladas por DrivenData} para la estructuración de proyectos de
+data science en Python:
+
+\begin{description}
+\tightlist
+\item[El archivo README]
+Todos nos hemos encontrado con archivos que se llaman ``README'',
+``README.md'', ``README.txt'', ``LÉAME'', ``LEEME.md'', ``LEER'',
+``LEEMEEEE!!.txt'' y otras variantes cuando descargamos algunos
+contenidos de internet. El archivo README es uno de los más importantes
+de cualquier proyecto. Como su nombre sugiere es el primer lugar por el
+que se accede al contenido. Un buen archivo README resume la información
+esencial que el desarrollador considera que el usuario debe conocer al
+hacer uso de su solución, y es el primer archivo que el usuario debe
+consultar cuando accede a un proyecto. Los archivos README suelen estar
+escritos en texto plano (sin ningún tipo de formato) o usando algún
+lenguaje de marcado (por lo general, MarkDown). Es fundamental que todo
+proyecto que encaremos cuente con un buen archivo README! Pueden ver un
+ejemplo de
+\href{https://github.com/sfbrigade/data-science-wg/blob/master/dswg_project_resources/Project-README-template.md}{una
+buena plantilla de README} para proyectos en Data Science en el sitio de
+Code for San Francisco.
+\item[El archivo LICENSE]
+Este es otro documento muy importante. Por un lado, resguarda tus
+derechos de autor y te permite definir qué usos pueden hacer otros de tu
+código. Pero también, permite a otros reutilizar los recursos que
+desarrollaste. No incluir una licencia en tu proyecto puede suponer un
+impedimento legal para que otros usen, modifiquen o reciclen tu código.
+Con el fin de hacer una ciencia más abierta se anima cada vez más el uso
+de licencias libres, que permiten al usuario el uso, el estudio, la
+redistribución y la mejora del trabajo. Algunos ejemplos conocidos de
+este tipos de licencias son
+\href{https://www.gnu.org/licenses/gpl-3.0.txt}{GNU GPL},
+\href{http://www.linfo.org/bsdlicense.html}{BSD} y
+\href{https://opensource.org/licenses/MIT}{MIT}.
+\item[El directorio data]
+Todos los datos que vayamos a usar van a estar albergados en esta
+carpeta. A su vez, dentro de esta carpeta, vamos a incluir una carpeta
+\textbf{raw} en la que vamos a almacenar la versión original de nuestros
+datos. Estos no deben ser \emph{nunca} modificados, sino que se deben
+crear nuevas versiones y almacenarlas en otros directorios dentro
+nuestra carpeta data.
+\item[El directorio models]
+Acá almacenamos nuestros modelos entrenados y serializados, sus
+predicciones y sus resúmenes.
+\item[El directorio notebooks]
+En este directorio vamos a guardar las
+\textbf{\href{https://jupyter.org/}{Jupyter Notebooks}} que escribamos.
+Estas son una muy buena solución para combinar código ejecutable y
+documentación. De este modo, podemos escribir reportes en forma
+sencilla, pero también podemos aprovechar su versatilidad para correr
+análisis exploratorios.
+\item[El directorio src]
+En esta carpeta va a estar contenido todo el código que escribamos para
+llevar a cabo nuestra análisis, como el que se ocupa de descargar,
+generar o limpiar los datos, definir y entrenar los modelos, o crear
+visualizaciones. La única excepción es que vamos a incluir código que
+usa el que está contenido en este directorio en las notebooks.
+\end{description}
+
+Esta es una simplificación de la propuesta, la estructura completa de
+directorio incluye archivos y carpetas específicos para Python, además
+de otros subdirectorios para usos especializados. Además, cabe señalar
+que este diseño puede resultar útil para un gran número de proyectos,
+pero no quiere decir que no existan casos en los que apartarse un poco
+de estas recomendaciones pueda resultar productivo.
+
+\hypertarget{ejercitacion-1}{%
+\subsection{Ejercitación}\label{ejercitacion-1}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Armá un directorio para una investigación cuantitativa siguiendo los
+  lineamientos propuestos por el equipo de DrivenData.
+\item
+  Escribí un README siguiendo las sugerencias de Code for San Francisco.
+\item
+  Investigá en internet qué lenguajes de marcado existen, cuál es la
+  sintaxis básica de MarkDown y cuáles son sus ventajas y desventajas.
+  Formateá el ``README'' que escribiste usando MarkDown y renombrá el
+  archivo ``README.md''.
+\item
+  Incluí una licencia GNU LGPL. ¿En qué se diferencia con la licencia
+  GNU GPL?
+\item
+  Contestá verdadero o falso y justificá:
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    No es necesario guardar una copia de nuestros datos originales.
+  \item
+    Las notebooks son especialmente útiles para la manipulación de datos
+    y su modelado.
+  \item
+    Un proyecto sin una licencia es por defecto de dominio público.
+  \item
+    La mayor parte del código fuente debe ser almacenada en ``src''.
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{control-de-versiones}{%
+\section{Control de versiones}\label{control-de-versiones}}
+
+El control de versiones se refiere a la gestión de los cambios en un
+archivo o un grupo de archivos. Es lo que hacemos cuando en una carpeta
+tenemos ``trabajo.odt'', ``trabajo2.odt'', ``trabajo final.odt'',
+``trabajo FINAL.odt'', ``trabajo FINALISIMO.odt'' y así \emph{ad
+infinitum}. No obstante, existen mejores formas para hacer esto. Una de
+las soluciones más usadas es \href{https://git-scm.com/}{Git}, que nos
+permite restaurar versiones pero también trabajar colaborativamente,
+entre otras muchas ventajas. No vamos a introducir su funcionamiento,
+pero pueden acceder a la
+\href{https://aladaspalabras.gitlab.io/hellogit/}{guía en español
+escrita por Macarena Fernández}.
+
+\hypertarget{ejercitacion-2}{%
+\subsection{Ejercitación}\label{ejercitacion-2}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Comprobá si Git está instalado en tu computadora. Si no sabés cómo
+  hacerlo, buscá en internet.
+\item
+  Si no tenés Git instalado, instalalo.
+\item
+  Investigá qué es un repositorio.
+\item
+  Creá un repositorio en tu computadora desde la terminal.
+\item
+  Abrí una cuenta en una plataforma de desarrollo colaborativo y creá un
+  repositorio desde ahí.
+\item
+  Buscá en internet qué otros sistemas de control de versiones existen y
+  qué servicios que usamos frecuentemente los usan.
+\end{enumerate}
+
+\hypertarget{scouting}{%
+\section{\texorpdfstring{\emph{Scouting}}{Scouting}}\label{scouting}}
+
+Al principio de una investigación se suelen llevar a cabo las siguientes
+tareas:
+
+\begin{itemize}
+\tightlist
+\item
+  una primera caracterización del fenómeno;
+\item
+  estudio de la bibliografía relevante;
+\item
+  observación del fenómeno en escenarios naturales para posibilitar una
+  primera generalización inductiva;
+\item
+  recolección de información adicional (e.g., de colegas, estudiantes,
+  etc.);
+\item
+  razonamiento deductivo.
+\end{itemize}
+
+Si estudiamos el orden de palabras de los verbos frasales del inglés,
+encontramos la siguiente alternancia:
+
+\begin{enumerate}
+\def\labelenumi{(\arabic{enumi})}
+\item
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \item
+    He picked up {[}\textsubscript{SN} the book{]}.
+
+    Orden: \emph{VPO} (verbo - partícula - objeto)
+  \item
+    He picked {[}\textsubscript{SN} the book{]} up.
+
+    Orden: \emph{VOP} (verbo - objeto- partícula)
+  \end{enumerate}
+\end{enumerate}
+
+Al observar este fenómeno podemos encontrar un gran número de posibles
+variables que podrían influir en la elección de una u otra forma. Las
+\textbf{variables} son símbolos que pueden tomar, por lo menos, dos
+estados o niveles diferentes (e.g., la edad de un grupo de estudiantes
+de secundaria). En este sentido, se oponen a las \textbf{constantes},
+que siempre presentan un mismo valor sin experimentar variación (e.g.,
+la edad de un grupo de jóvenes de 12 años). Entre las variables que
+pueden afectar al posicionamiento de la partícula en los verbos frasales
+del inglés, las siguientes han sido propuestas en la bibliografía:
+
+\begin{itemize}
+\tightlist
+\item
+  Complejidad del OD (Fraser, 1966);
+\item
+  Largo del OD (Chen, 1986; Hawkins, 1994);
+\item
+  Presencia de un SP direccional (Chen, 1986);
+\item
+  Animacidad (Gries, 2003);
+\item
+  Concreción (Gries, 2003); y
+\item
+  Tipo del OD (Van Dongen, 1919), entre otras.
+\end{itemize}
+
+Esta información puede ser más fácilmente visualizada en formato
+tabular, que permite reconocer qué variables han sido consideradas en
+los distintos estudios y cuántas variables consideró cada estudio (véase
+\protect\hyperlink{cuadro1}{Cuadro 1}). Otra tabla útil es la que
+sintetiza los niveles de las variables y sus preferencias para uno u
+otro orden. Como se ve en el \protect\hyperlink{cuadro2}{Cuadro 2}, el
+orden \emph{VPO} sería usado con OODD cognitivamente más complejos (SSNN
+complejos y largos con sustantivos léxicos que refieren a entidades
+abstractas). \emph{VOP}, en cambio, es usado en los casos opuestos.
+
+\begin{longtable}[]{@{}lccccc@{}}
+\caption{\protect\hypertarget{cuadro1}{}{Resumen} de la bibliografía
+sobre posicionamiento de partículas en inglés I.}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.18\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[b]{0.15\columnwidth}\centering
+Van Dongen (1919)\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering
+Fraser (1966)\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering
+Chen (1986)\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering
+Hawkins (1994)\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering
+Gries (2003)\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.18\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[b]{0.15\columnwidth}\centering
+Van Dongen (1919)\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering
+Fraser (1966)\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering
+Chen (1986)\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering
+Hawkins (1994)\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering
+Gries (2003)\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.18\columnwidth}\raggedright
+Complejidad\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\(\times\)\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.18\columnwidth}\raggedright
+Largo\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\(\times\)\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\(\times\)\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.18\columnwidth}\raggedright
+SP Direccional\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\(\times\)\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.18\columnwidth}\raggedright
+Animacidad\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\(\times\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.18\columnwidth}\raggedright
+Concreción\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\(\times\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.18\columnwidth}\raggedright
+Tipo\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering
+\(\times\)\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}lll@{}}
+\caption{\protect\hypertarget{cuadro2}{}{Resumen} de la bibliografía
+sobre posicionamiento de partículas en inglés II.}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.22\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[b]{0.39\columnwidth}\raggedright
+Nivel de variable para \emph{VPO}\strut
+\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\raggedright
+Nivel de variable para \emph{VOP}\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.22\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[b]{0.39\columnwidth}\raggedright
+Nivel de variable para \emph{VPO}\strut
+\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\raggedright
+Nivel de variable para \emph{VOP}\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
+Complejidad\strut
+\end{minipage} & \begin{minipage}[t]{0.39\columnwidth}\raggedright
+modificado sintagmáticamente modificado por cláusula\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
+\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
+Largo\strut
+\end{minipage} & \begin{minipage}[t]{0.39\columnwidth}\raggedright
+largo\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
+\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
+SP Direccional\strut
+\end{minipage} & \begin{minipage}[t]{0.39\columnwidth}\raggedright
+ausente\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
+presente\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
+Animacidad\strut
+\end{minipage} & \begin{minipage}[t]{0.39\columnwidth}\raggedright
+inanimado\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
+animado\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
+Concreción\strut
+\end{minipage} & \begin{minipage}[t]{0.39\columnwidth}\raggedright
+abstracto\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
+concreto\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.22\columnwidth}\raggedright
+Tipo\strut
+\end{minipage} & \begin{minipage}[t]{0.39\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
+pronominal\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{ejercitacion-3}{%
+\subsection{Ejercitación}\label{ejercitacion-3}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Planteá un problema de investigación de tu interés.
+\item
+  ¿Cómo lo caracterizarías?
+\item
+  Completá la siguiente tabla con bibliografía que sea relevante para el
+  problema que planteaste. En la columna observación, escribí por qué
+  ese trabajo es particularmente útil para tu propuesta de
+  investigación.
+
+  \begin{longtable}[]{@{}llll@{}}
+  \toprule
+  \begin{minipage}[b]{0.22\columnwidth}\raggedright
+  Autor\strut
+  \end{minipage} & \begin{minipage}[b]{0.15\columnwidth}\raggedright
+  Año\strut
+  \end{minipage} & \begin{minipage}[b]{0.17\columnwidth}\raggedright
+  Título\strut
+  \end{minipage} & \begin{minipage}[b]{0.34\columnwidth}\raggedright
+  Observación\strut
+  \end{minipage}\tabularnewline
+  \midrule
+  \endhead
+  \begin{minipage}[t]{0.22\columnwidth}\raggedright
+  \strut
+  \end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright
+  \strut
+  \end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright
+  \strut
+  \end{minipage} & \begin{minipage}[t]{0.34\columnwidth}\raggedright
+  \strut
+  \end{minipage}\tabularnewline
+  \begin{minipage}[t]{0.22\columnwidth}\raggedright
+  \strut
+  \end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright
+  \strut
+  \end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright
+  \strut
+  \end{minipage} & \begin{minipage}[t]{0.34\columnwidth}\raggedright
+  \strut
+  \end{minipage}\tabularnewline
+  \begin{minipage}[t]{0.22\columnwidth}\raggedright
+  \strut
+  \end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright
+  \strut
+  \end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright
+  \strut
+  \end{minipage} & \begin{minipage}[t]{0.34\columnwidth}\raggedright
+  \strut
+  \end{minipage}\tabularnewline
+  \begin{minipage}[t]{0.22\columnwidth}\raggedright
+  \strut
+  \end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright
+  \strut
+  \end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright
+  \strut
+  \end{minipage} & \begin{minipage}[t]{0.34\columnwidth}\raggedright
+  \strut
+  \end{minipage}\tabularnewline
+  \begin{minipage}[t]{0.22\columnwidth}\raggedright
+  \strut
+  \end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright
+  \strut
+  \end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright
+  \strut
+  \end{minipage} & \begin{minipage}[t]{0.34\columnwidth}\raggedright
+  \strut
+  \end{minipage}\tabularnewline
+  \bottomrule
+  \end{longtable}
+\item
+  Escribí una lista de las personas en tu lugar de estudio o trabajo que
+  podrían sugerirte bibliografía o líneas de análisis para este problema
+  en particular.
+\item
+  ¿Qué motores de búsqueda podés usar para encontrar investigaciones
+  científicas? Usalos para encontrar bibliografía de utilidad para la
+  investigación que propusiste.
+\end{enumerate}
+
+\hypertarget{hipotesis-y-operacionalizacion}{%
+\section{Hipótesis y
+operacionalización}\label{hipotesis-y-operacionalizacion}}
+
+Una vez que tenemos una visión general del fenómeno que queremos
+estudiar, es el momento de formular \textbf{hipótesis}.
+
+\hypertarget{hipotesis-cientificas-en-forma-de-texto}{%
+\subsection{Hipótesis científicas en forma de
+texto}\label{hipotesis-cientificas-en-forma-de-texto}}
+
+Las hipótesis pueden clasificarse en \textbf{hipótesis de tipo 1} y
+\textbf{de tipo 2}. Las primeras se caracterizan por ser:
+
+\begin{itemize}
+\tightlist
+\item
+  enunciados generales ocupados de más de un evento singular;
+\item
+  enunciados con una estructura condicional (\emph{si\ldots,
+  entonces\ldots{}}), o que, al menos, puede ser parafraseados como tal;
+  y
+\item
+  potencialmente \textbf{falsables} (i.e., se pueden pensar eventos o
+  situaciones que contradigan al enunciado) y \textbf{testeables} (i.e.,
+  se pueden realizar pruebas que determinen la verdad o falsedad del
+  enunciado).
+\end{itemize}
+
+Para el estudio del posicionamiento de partículas en inglés, podemos
+pensar, por ejemplo, las siguientes hipótesis:
+
+\begin{itemize}
+\tightlist
+\item
+  \protect\hypertarget{h1}{}{si} el objeto directo de un verbo frasal
+  transitivo es sintácticamente complejo, entonces los hablantes nativos
+  producirán el orden de constituyentes \emph{VPO} más seguido que
+  cuando el objeto directo es sintácticamente simple;
+\item
+  si el objeto directo de un verbo frasal transitivo es largo, entonces
+  los hablantes nativos producirán el orden de constituyentes \emph{VPO}
+  más seguido que cuando el objeto directo es corto; o
+\item
+  si una construcción de verbo-partícula es seguida por un SP
+  direccional, entonces los hablantes nativos producirán el orden de
+  constituyentes \emph{VOP} más seguido que cuando el SP direccional no
+  está presente.
+\end{itemize}
+
+A su vez, las variables que consideremos pueden clasificarse según su
+influencia:
+
+\begin{description}
+\tightlist
+\item[variable independiente]
+es la variable presente en la prótasis, y suele referirse a la causa de
+los cambios/efectos. La variable independiente representa tratamientos o
+condiciones que el investigador controla (directa o indirectamente) para
+entender sus efectos sobre la variable dependiente.
+\item[variable dependiente]
+es la variable presente en la apódosis, cuyos valores, variación o
+distribución se quieren explicar. La variable dependiente es la salida
+que depende del tratamiento experimental o de lo que el investigador
+cambia o manipula.
+\item[\emph{confounder}]
+es una variable que interactúa tanto con la variable independiente como
+con la variable dependiente. Es importante identificar los confounders
+para realizar mejores diseños experimentales y obtener resultados con
+menos ruido.
+\item[variable moderadora]
+es una variable independiente secundaria que se selecciona para
+determinar si afecta la relación entre la variable independiente y la
+dependiente.
+\end{description}
+
+Por su parte, las hipótesis de tipo 2 contienen solo una variable
+dependiente y ninguna variable independiente. En estos casos, la
+hipótesis es un enunciado sobre los valores, variación o distribución de
+la variable dependiente. Por ejemplo, ``\protect\hypertarget{h2}{}{los}
+dos niveles de Orden no son igualmente frecuentes''. Así, podemos
+definir una hipótesis como un enunciado acerca de la relación entre dos
+o más variables, o acerca de una variable en un \textbf{contexto
+muestral}, que se espera que aplique en contextos similares y/o para
+objetos similares de la población.
+
+Una vez que formulamos nuestra hipótesis, a la que vamos a llamar
+\textbf{hipótesis} \textbf{alternativa} (H\textsubscript{1}), y antes de
+recolectar datos, tenemos que definir las situaciones y estados de cosas
+que van a falsar nuestra hipótesis. De este modo, definimos la
+\textbf{hipótesis nula} (H\textsubscript{0}) como el opuesto lógico de
+H\textsubscript{1} (predice la ausencia del efecto que enuncia
+H\textsubscript{1}). La llamamos hipótesis nula porque se postula para
+ser anulada con los datos de la investigación. Esto es importante,
+porque la idea es que ambas hipótesis cubran todo el espacio de
+resultados o \textbf{espacio muestral}, i.e., el conjunto de todos los
+resultados teóricamente posibles. Por ejemplo:
+
+\begin{itemize}
+\tightlist
+\item
+  si el objeto directo de un verbo frasal transitivo es sintácticamente
+  complejo, entonces los hablantes nativos \emph{no} producirán el orden
+  de constituyentes VPO más seguido que cuando el objeto directo es
+  sintácticamente simple (H\textsubscript{0} correspondiente a la
+  \protect\hyperlink{h1}{primera hipótesis de tipo 1}); o
+\item
+  los dos niveles de Orden (VPO y VOP) \sout{\emph{no} no} son
+  igualmente frecuentes (H\textsubscript{0} correspondiente a la
+  \protect\hyperlink{h2}{hipótesis de tipo 2}).
+\end{itemize}
+
+Ahora bien, en algunas investigaciones es posible suponer que los
+efectos o relaciones entre variables ocurran en una dirección
+determinada (se desvíen de la H\textsubscript{0} hacia \emph{un} lado).
+En estos casos, se dice que se establece una \textbf{hipótesis
+direccional}. Por el contrario, las \textbf{hipótesis no direccionales}
+solo predicen que existe un efecto o relación sin especificar la
+dirección del efecto.
+
+\hypertarget{operacionalizacion-de-variables}{%
+\subsection{Operacionalización de
+variables}\label{operacionalizacion-de-variables}}
+
+Una vez que formulamos nuestra hipótesis, es importante encontrar un
+modo de \textbf{operacionalizar} las variables. Esto supone decidir qué
+será observado, contado, medido, etc. cuando investiguemos nuestras
+hipótesis. Por ejemplo, si volvemos a las variables consideradas en la
+bibliografía sobre el orden de palabras en los verbos frasales del
+inglés, podemos operacionalizarlas como sigue:
+
+\begin{itemize}
+\tightlist
+\item
+  Complejidad: OD \emph{simple} (e.g., \emph{the book}), \emph{OD
+  modificado} \emph{sintagmáticamente} (e.g., \emph{the book on the
+  table}) u \emph{OD modificado por} \emph{cláusula} (e.g., \emph{the
+  book I had bought in Europe});
+\item
+  Largo: el largo del OD medido en sílabas;
+\item
+  SP direccional: \emph{presencia} o \emph{ausencia} de un SP
+  direccional (e.g., \emph{He picked the book up {[}\textsubscript{SP}
+  from the table{]}});
+\item
+  Animacidad: \emph{animado} o \emph{inanimado};
+\item
+  Concreción: \emph{concreto} o \emph{abstracto}; y
+\item
+  Tipo del OD: \emph{pronominal} (e.g., \emph{He picked
+  {[}\textsubscript{pron} him{]} up this morning}),
+  \emph{semipronominal} (e.g., \emph{He picked {[}\textsubscript{semi}
+  something{]} up from the floor}), \emph{léxico} (e.g., \emph{He picked
+  {[}\textsubscript{léx} people{]} up this morning}) o \emph{nombre
+  propio} (e.g., \emph{He picked {[}\textsubscript{prop} Peter{]} up
+  this morning}).
+\end{itemize}
+
+Otro ejemplo, si queremos operacionalizar el conocimiento de una lengua
+extranjera de una persona, podemos tomar en consideración:
+
+\begin{itemize}
+\tightlist
+\item
+  la complejidad de las oraciones que una persona puede formar en la
+  lengua en cuestión;
+\item
+  el tiempo en segundos entre dos errores en la conversación;
+\item
+  el número de errores cada 100 palabras en un texto que la persona
+  escriba en 90 minutos.
+\end{itemize}
+
+La operacionalización de variables involucra el uso de \textbf{niveles}
+numéricos para representar estados de variables. Un número puede ser una
+medida (e.g., 402 ms de tiempo de reacción), pero los niveles, i.e.,
+estados discretos no numéricos, también pueden, teóricamente, ser
+codificados usando números. Según los niveles de medida las variables
+pueden clasificarse en:
+
+\begin{description}
+\tightlist
+\item[variable nominal (o binaria)]
+solo pueden tomar dos niveles diferentes y sus valores solo revelan que
+los objetos con estos valores exhiben características diferentes (e.g.,
+animacidad);
+\item[variable categórica]
+pueden tomar tres niveles diferentes o más y sus valores solo revelan
+que los objetos con estos valores exhiben características diferentes
+(e.g., aspecto);
+\item[variable ordinal]
+permiten distinguir categorías, pero también permiten rankear los
+objetos de forma significativa (e.g., complejidad del OD); y
+\item[variable cuantitativa (o de razón)]
+además de distinguir categorías y rankear objetos, también permiten
+comparar las diferencias y los ratios entre valores de forma
+significativa (e.g., largo en sílabas).
+\end{description}
+
+\hypertarget{hipotesis-estadisticas-en-formato-estadisticomatematico}{%
+\subsection{Hipótesis estadísticas en formato
+estadístico/matemático}\label{hipotesis-estadisticas-en-formato-estadisticomatematico}}
+
+Después de formular las hipótesis (H\textsubscript{0} y
+H\textsubscript{1}) en forma de texto y definir cómo operacionalizar las
+variables, es necesario formular dos \textbf{versiones estadísticas} de
+las hipótesis. Esto significa expresar los resultados numéricos
+esperados sobre la base de las hipótesis textuales. Dichos resultados
+suelen involucrar una de las siguientes formas matemáticas:
+
+\begin{itemize}
+\tightlist
+\item
+  frecuencias;
+\item
+  promedios;
+\item
+  dispersiones;
+\item
+  correlaciones; o
+\item
+  distribuciones.
+\end{itemize}
+
+Este va a ser el formato que vamos a usar para evaluar la
+\textbf{significancia} de nuestras hipótesis (véase más abajo), y su
+definición va a depender directamente de cómo operacionalizamos las
+variables. Por ejemplo, si nuestra hipótesis involucra la variable largo
+del OD, su forma estadística no va a ser la misma si operacionalizamos
+cuantitativamente como largo medido en número de sílabas o de forma
+discreta como una variable categórica con niveles \emph{corto},
+\emph{mediano} y \emph{largo.} En el primer caso, nuestras hipótesis
+estadísticas van a poder referirse a la media del largo, mientras que
+esto no es posible en el segundo caso. Tomando largo como una variable
+categórica podríamos operacionalizar nuestras hipótesis, por ejemplo,
+basándonos en conteos o frecuencias.
+
+Retomemos la \protect\hyperlink{h1}{H\textsubscript{1} respecto de la
+presencia/ausencia de un SP direccional}: si una construcción de
+verbo-partícula es seguida por un SP direccional, entonces los hablantes
+nativos producirán el orden de constituyentes VOP más seguido que cuando
+el SP direccional no está presente. Si formulamos nuestras hipótesis
+matemáticamente, obtenemos los siguientes resultados:
+
+\[H_{1~\textrm{direccional}}: n_{\textrm{SSPP dir. en VPO}} < n_{\textrm{SSPP dir. en VOP}}\]
+\[H_{1~\textrm{no direccional}}: n_{\textrm{SSPP dir. en VPO}} \neq n_{\textrm{SSPP dir. en VOP}}\]
+\[H_{0}: n_{\textrm{SSPP dir. en VPO}} =n_{\textrm{SSPP dir. en VOP}}\]
+
+\hypertarget{ejercitacion-4}{%
+\subsection{Ejercitación}\label{ejercitacion-4}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  ¿Cuáles de los siguientes enunciados podrían ser hipótesis?
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    La variación lingüística está dada por diferencias en las
+    propiedades de las categorías funcionales.
+  \item
+    ¿La frecuencia fundamental aumenta con la edad?
+  \item
+    El sujeto LC aprenderá la palabra \emph{casa} antes que la palabra
+    \emph{examen}.
+  \item
+    La presencia de tonos en una lengua está influida por las
+    condiciones climáticas de la zona en que se habla.
+  \item
+    La presencia de tonos en una lengua está influida por la humedad de
+    la zona en que se habla.
+  \item
+    Las lenguas con menos hablantes posiblemente tienden a cambiar más
+    rápidamente que las lenguas con muchos hablantes.
+  \item
+    La relación entre forma y significado es arbitraria.
+  \item
+    Oumuamua era una nave interestelar que llevaba criaturas con un
+    sistema simbólico doblemente articulado.
+  \end{enumerate}
+\item
+  Reformulá los enunciados que no tienen las características de las
+  hipótesis para que las tengan.
+\item
+  ¿De qué tipo es cada hipótesis?
+\item
+  Operacionalizalas matemáticamente.
+\item
+  Operacionalizá las variables involucradas y determiná de qué tipo es
+  cada una.
+\item
+  ¿Qué \emph{confounders} y variables moderadoras podrían estar
+  influyendo y no están siendo tomadas en cuenta?
+\end{enumerate}
+
+\hypertarget{recoleccion-de-datos}{%
+\section{Recolección de datos}\label{recoleccion-de-datos}}
+
+La \textbf{recolección} de datos comienza solo después de haber
+operacionalizado las variables y formulado las hipótesis. Por lo
+general, no se estudia la población entera sino una muestra. Si queremos
+que nuestros datos puedan generalizarse a la población, esta muestra
+debe ser \textbf{representativa} (i.e., las distintas partes de la
+población deben estar reflejadas en la muestra) y \textbf{balanceada}
+(i.e., los tamaños de las partes de la muestra deben corresponderse con
+las proporciones que presentan en la población). Esto muchas veces es un
+ideal teórico porque con frecuencia no conocemos todas las partes y las
+proporciones de la población. Una forma de obtener una muestra más
+representativa y balanceada es a partir de la randomización. Este es uno
+de los principios más importantes de la recolección de datos.
+
+\hypertarget{ejercitacion-5}{%
+\subsection{Ejercitación}\label{ejercitacion-5}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Querés caracterizar los distintos usos del prefijo \emph{in-} en una
+  población de 150.000 hablantes,
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    ¿cuántos participantes necesitarías para la recolección de datos?
+  \item
+    ¿qué subgrupos de tu población deberías representar?
+  \item
+    ¿creés que esos subgrupos presentarán un comportamiento
+    diferenciado?
+  \end{enumerate}
+\item
+  En una población compuesta por hablantes de hasta 25 años en un 43\%,
+  hablantes de entre 26 y 50 años en un 29\%, hablantes de entre 51 y 75
+  años en un 19\% y mayores de 76 en un 9\%, querés estudiar la
+  influencia del trap en la lengua. ¿Cómo conformarías la muestra?
+\end{enumerate}
+
+\hypertarget{almacenamiento-de-datos}{%
+\section{Almacenamiento de datos}\label{almacenamiento-de-datos}}
+
+Una vez que recolectamos los datos (o mientras lo hacemos), es necesario
+\textbf{almacenarlos} en un formato que nos permita anotarlos,
+manipularlos y evaluarlos fácilmente. Para esto es recomendable el uso
+de hojas de cálculo (e.g., LibreOffice Calc), bases de datos o R.
+
+Un formato recomendado para el almacenamiento es el
+\emph{case-by-variable} (véase \protect\hyperlink{cbv}{Cuadro 4}):
+
+\begin{itemize}
+\tightlist
+\item
+  la primera fila contiene los nombres de las variables;
+\item
+  las otras filas representan cada una un \emph{data point} (i.e., una
+  observación determinada de la variable dependiente);
+\item
+  la primera columna numera todos los \(n\) casos de 1 a \(n\) (esto
+  permite identificar cada fila y restaurar el orden original);
+\item
+  las otras columnas representan una sola variable o característica
+  correspondiente a un determinado \emph{data point}; y
+\item
+  la información faltante se anota usando \emph{un} símbolo (por
+  ejemplo, ``NA'') y el mismo solo debe usarse para representar dicho
+  significado.
+\end{itemize}
+
+\begin{longtable}[]{@{}llll@{}}
+\caption{\protect\hypertarget{cbv}{}{Una} tabla que usa el formato
+\emph{case-by-variable} para codificar información sobre el
+posicionamiento de partículas en inglés en función del largo del OD
+medido en sílabas.}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.08\columnwidth}\raggedright
+Caso\strut
+\end{minipage} & \begin{minipage}[b]{0.09\columnwidth}\raggedright
+Orden\strut
+\end{minipage} & \begin{minipage}[b]{0.09\columnwidth}\raggedright
+Largo\strut
+\end{minipage} & \begin{minipage}[b]{0.63\columnwidth}\raggedright
+Oración\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.08\columnwidth}\raggedright
+Caso\strut
+\end{minipage} & \begin{minipage}[b]{0.09\columnwidth}\raggedright
+Orden\strut
+\end{minipage} & \begin{minipage}[b]{0.09\columnwidth}\raggedright
+Largo\strut
+\end{minipage} & \begin{minipage}[b]{0.63\columnwidth}\raggedright
+Oración\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.08\columnwidth}\raggedright
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+vpo\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.63\columnwidth}\raggedright
+He turned on the lights.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.08\columnwidth}\raggedright
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+vpo\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.63\columnwidth}\raggedright
+The police broke into the house.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.08\columnwidth}\raggedright
+3\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+vop\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.63\columnwidth}\raggedright
+Mary asked Susan out.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.08\columnwidth}\raggedright
+4\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+vop\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.63\columnwidth}\raggedright
+I had to hold my dog back because there was a cat in the park.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.08\columnwidth}\raggedright
+5\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+vop\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.63\columnwidth}\raggedright
+You can warm your feet up in front of the fireplace.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.08\columnwidth}\raggedright
+6\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+vop\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+3\strut
+\end{minipage} & \begin{minipage}[t]{0.63\columnwidth}\raggedright
+Our teacher finally broked the project down into three separate
+parts.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.08\columnwidth}\raggedright
+7\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+vpo\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+3\strut
+\end{minipage} & \begin{minipage}[t]{0.63\columnwidth}\raggedright
+I'm looking for a red dress.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.08\columnwidth}\raggedright
+\ldots{}\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+\ldots{}\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+\ldots{}\strut
+\end{minipage} & \begin{minipage}[t]{0.63\columnwidth}\raggedright
+\ldots{}\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{ejercitacion-6}{%
+\subsection{Ejercitación}\label{ejercitacion-6}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  El dataset en \url{https://tinyurl.com/y4dl43ea} contiene información
+  sobre el orden de sujeto, verbo y objeto de distintas lenguas y de la
+  familia lingüística a la que pertenecen. Querés investigar cómo este
+  orden se ve influido por la familia lingüística. Creá un dataset que
+  contenga esta información y se ajuste al formato
+  \emph{case-by-variable}.
+\item
+  Investigá sobre la importancia de usar formatos estándar para el
+  almacenamiento de datos.
+\item
+  Cross-Linguistic Data Formats es una iniciativa que busca proponer
+  estándares para la representación de datos translingüísticos para la
+  investigación tipológica e histórica. ¿Qué principios guían su diseño?
+  ¿Qué tipos de datos soporta actualmente?
+\item
+  ¿Qué bases de datos disponibles abiertamente en internet se ajustan a
+  estándares definidos por esta iniciativa?
+\end{enumerate}
+
+\hypertarget{como-decidir}{%
+\section{Cómo decidir}\label{como-decidir}}
+
+Cuando ya almacenamos los datos, procedemos a evaluarlos con algún
+\textbf{test estadístico}. Sin embargo, la forma de proceder que se
+acostumbra en ciencias biológicas, psicología, ciencias sociales y
+humanidades consiste no en probar que H\textsubscript{1} es correcta,
+sino que la versión estadística de H\textsubscript{0} es improbable y,
+por lo tanto, pueda ser rechazada. Ya que H\textsubscript{0} es la
+contracara lógica de H\textsubscript{1}, esto apoya H\textsubscript{1}.
+
+El \textbf{testeo de hipótesis} nos permite decidir si un
+\textbf{efecto} observado se debe a relaciones reales entre las
+variables o al azar\footnote{Realmete el testeo de hipótesis no siempre
+  nos permite decidir. Algunos procedimientos (como vamos a ver a
+  continuación) solo nos permiten calcular la probabilidad de que una
+  observación se dé por azar.}. Dicho de otra forma, nos permite
+justificar la preferencia por explicar un fenómeno por medio de una
+interacción entre variables contra considerar que dicha interacción no
+tiene influencia sobre el efecto observado. Tanto el estadista como las
+editoriales, y los demás actores sociales quieren evitar perder tiempo y
+plata analizando/interpretando/considerando conclusiones incorrectas.
+Para sortear esto existen distintas técnicas. Uno de los procedimientos
+que se utilizan (especialmente en psicología) es la \textbf{Prueba de
+Significancia de la Hipótesis} \textbf{Nula} (NHST, por sus siglas en
+inglés)\footnote{La NHST ha sido fuertemente discutida. Para un análisis
+  crítico de este procedimiento, véase Cohen (1994) y Perezgonzalez
+  (2015).}. En líneas muy generales, podemos definirla como sigue:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  definición del \textbf{nivel de significancia
+  \emph{p}\textsubscript{crítico}} , que por lo general es 0,05;
+\item
+  análisis de los datos computando la probabilidad de un efecto \emph{e}
+  (e.g., una distribución, una diferencia de medias, una correlación)
+  usando las hipótesis estadísticas;
+\item
+  computación de la \textbf{probabilidad de error \emph{p}} (qué tan
+  probable es encontrar \emph{e} o algo que se desvía aún más de
+  H\textsubscript{0} cuando H\textsubscript{0} es verdadera); y
+\item
+  comparación de \emph{p}\textsubscript{crítico} y \emph{p} y decidir si
+  \emph{p} \textless{} \emph{p}\textsubscript{crítico}; entonces podemos
+  rechazar H\textsubscript{0} y aceptar H\textsubscript{1}.
+\end{enumerate}
+
+Si la probabilidad de error \emph{p} de un fenómeno es menor a
+\emph{p}\textsubscript{crítico} podemos rechazar H\textsubscript{0} y
+aceptar H\textsubscript{1}. Esto no significa que hayamos probado
+H\textsubscript{1}, sino que la probabilidad de error \emph{p} es lo
+suficientemente baja como para aceptar H\textsubscript{1}. La
+probabilidad de error \emph{p} es conocida como \textbf{valor \emph{p}}.
+El \protect\hyperlink{p}{Cuadro 5} recoge la semántica estándar de dicho
+valor.
+
+\hypertarget{p}{}
+
+\begin{longtable}[]{@{}lll@{}}
+\caption{Semántica de los valores de \emph{p}.}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.30\columnwidth}\raggedright
+Valor\strut
+\end{minipage} & \begin{minipage}[b]{0.38\columnwidth}\raggedright
+Significancia\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\raggedright
+Indicación\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.30\columnwidth}\raggedright
+Valor\strut
+\end{minipage} & \begin{minipage}[b]{0.38\columnwidth}\raggedright
+Significancia\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\raggedright
+Indicación\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(p < 0.001\)\strut
+\end{minipage} & \begin{minipage}[t]{0.38\columnwidth}\raggedright
+altamente significativo\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright
+***\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(0.001 \leq p < 0.01\)\strut
+\end{minipage} & \begin{minipage}[t]{0.38\columnwidth}\raggedright
+muy significativo\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright
+**\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(0.01 \leq p < 0.05\)\strut
+\end{minipage} & \begin{minipage}[t]{0.38\columnwidth}\raggedright
+significativo\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright
+*\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(0.05 \leq p < 0.1\)\strut
+\end{minipage} & \begin{minipage}[t]{0.38\columnwidth}\raggedright
+marginalmente significativo\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright
+\emph{ms} o .\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(0.01 \leq p\)\strut
+\end{minipage} & \begin{minipage}[t]{0.38\columnwidth}\raggedright
+no significativo\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright
+\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+Al analizar la significancia del efecto, es correcto rechazar la
+hipótesis nula cuando la hipótesis alternativa es verdadera, y aceptar
+la hipótesis nula cuando esta es verdadera (véase
+\protect\hyperlink{errores}{Cuadro 6}). Sin embargo, existen dos
+combinaciones lógicas más. Un \textbf{error de tipo I} ocurre cuando la
+hipótesis nula es verdadera y se rechaza. Por lo general, estos errores
+deben ser evitados tanto como sea posible en la carrera del
+investigador, y es lo que buscamos hacer cuando llevamos a cabo pruebas
+de testeo de hipótesis. Asimismo, un \textbf{error de tipo II} ocurre
+cuando la hipótesis alternativa es verdadera y se rechaza. Estos errores
+suelen ser menos graves que los de tipo I, pero, de todos modos, debemos
+reducir la posibilidad de que ocurran.
+
+\hypertarget{errores}{}
+
+\begin{longtable}[]{@{}lll@{}}
+\caption{Errores de tipo I y II.}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.19\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\raggedright
+H\textsubscript{0} es verdadera\strut
+\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\raggedright
+H\textsubscript{1} es verdadera\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.19\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\raggedright
+H\textsubscript{0} es verdadera\strut
+\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\raggedright
+H\textsubscript{1} es verdadera\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.19\columnwidth}\raggedright
+Rechaza H\textsubscript{0}\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
+error de tipo I\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
+correcto\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.19\columnwidth}\raggedright
+Acepta H\textsubscript{0}\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
+correcto\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright
+error de tipo II\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{valores-p-de-una-cola-en-distribuciones-de-probabilidad-discretas}{%
+\subsection{\texorpdfstring{Valores \emph{p} de una cola en
+distribuciones de probabilidad
+discretas}{Valores p de una cola en distribuciones de probabilidad discretas}}\label{valores-p-de-una-cola-en-distribuciones-de-probabilidad-discretas}}
+
+Supongamos que queremos estudiar ambigüedad categorial. Para ello
+encuestamos 3 sujetos acerca de si la palabra \emph{camino} es un verbo
+o un nombre, asumiendo que los nombres son cognitivamente más
+prominentes y que, por lo tanto, las respuestas serán mayores para esta
+categoría:
+
+\begin{description}
+\tightlist
+\item[H\textsubscript{0} textual]
+ambas respuestas son igualmente frecuentes.
+\item[H\textsubscript{1} textual]
+\emph{nombre} es una respuesta más frecuente que \emph{verbo}.
+\item[H\textsubscript{0} estadística]
+los sujetos van a responder \emph{nombre} tantas veces como
+\emph{verbo}: \(n_{\textrm{nombre}} = n_{\textrm{verbo}}\).
+\item[H\textsubscript{1} estadística]
+los sujetos van a responder \emph{nombre} más veces que \emph{verbo}:
+\(n_{\textrm{nombre}} > n_{\textrm{verbo}}\).
+\end{description}
+
+¿Si los 3 sujetos responden que \emph{camino} es un nombre podemos
+rechazar H\textsubscript{0} y aceptar H\textsubscript{1} asumiendo un
+\emph{p}\textsubscript{crítico} = 0,05? El
+\protect\hyperlink{prob}{Cuadro 7} sintetiza la probabilidad de cada
+respuesta bajo el supuesto de que H\textsubscript{0} es verdadera. Las
+columnas N y V representan \textbf{variables aleatorias}. Cada una de
+ellas contabiliza la frecuencia de ocurrencia de un nivel para una
+variable. De esta forma creamos dos nuevos espacios muestrales con una
+cantidad reducida (y, por lo tanto, más manejable) de elementos (i.e.,
+posibles resultados)\footnote{En este caso, solo es necesario definir
+  una variable aleatoria, ya que ambas son complementarias :
+  \(N = 3 - V\). Definimos dos variables aleatorias a modo ilustrativo.}.
+La columna \emph{p}\textsubscript{resultado} representa la probabilidad
+de que ocurra la combinación de respuestas de los sujetos
+correspondiente. Dado que, bajo la H\textsubscript{0} asumimos que
+\emph{nombre} y \emph{verbo} son respuestas igualmente probables, la
+probabilidad de que un sujeto dado responda \emph{nombre} o responda
+\emph{verbo} es la misma (\(P(nombre) + P(verbo) = 1\);
+\(P(nombre) = P(verbo) = 0.5\)). La probabilidad de cada combinación
+puede calcularse de dos formas. La primera es, sabiendo que la suma de
+las probabilidades de las combinaciones debe sumar 1 y asumiendo que
+cada combinación es igualmente probable, dividir 1 por el total de
+elementos en el espacio muestral: \(1 \div 8 = 0.125\). Otra posibilidad
+consiste en calcular el producto de las probabilidades de las 3
+respuestas correspondientes a la combinación:
+\(0.5 \times 0.5 \times 0.5 = 0.125\). Dado que, bajo
+H\textsubscript{0}, la probabilidad de que los 3 sujetos respondan
+nombre es de \(p = 0.125\) y que \(p > p_{\textrm{crítico}}\) no podemos
+rechazar H\textsubscript{0}.
+
+\hypertarget{prob}{}
+
+\begin{longtable}[]{@{}llllll@{}}
+\caption{Todos los resultados posibles de pedir a 3 sujetos que
+clasifiquen \emph{camino} como un nombre o un verbo.}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.13\columnwidth}\raggedright
+Sujeto 1\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\raggedright
+Sujeto 2\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\raggedright
+Sujeto 3\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\raggedright
+\emph{N}\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\raggedright
+\emph{V}\strut
+\end{minipage} & \begin{minipage}[b]{0.32\columnwidth}\raggedright
+\(p_{\textrm{resultados}}\)\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.13\columnwidth}\raggedright
+Sujeto 1\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\raggedright
+Sujeto 2\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\raggedright
+Sujeto 3\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\raggedright
+\emph{N}\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\raggedright
+\emph{V}\strut
+\end{minipage} & \begin{minipage}[b]{0.32\columnwidth}\raggedright
+\(p_{\textrm{resultados}}\)\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.13\columnwidth}\raggedright
+nombre\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+nombre\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+nombre\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+3\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+0\strut
+\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright
+\(0.125\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.13\columnwidth}\raggedright
+nombre\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+nombre\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+verbo\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright
+\(0.125\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.13\columnwidth}\raggedright
+nombre\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+verbo\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+nombre\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright
+\(0.125\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.13\columnwidth}\raggedright
+nombre\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+verbo\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+verbo\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright
+\(0.125\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.13\columnwidth}\raggedright
+verbo\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+nombre\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+nombre\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright
+\(0.125\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.13\columnwidth}\raggedright
+verbo\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+nombre\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+verbo\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright
+\(0.125\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.13\columnwidth}\raggedright
+verbo\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+verbo\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+nombre\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright
+\(0.125\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.13\columnwidth}\raggedright
+verbo\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+verbo\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright
+verbo\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+0\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+3\strut
+\end{minipage} & \begin{minipage}[t]{0.32\columnwidth}\raggedright
+\(0.125\)\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+La distribución de probabilidad de cada resultado posible para 3 sujetos
+queda recogida en el primer histograma de la Figura 1. Como se observa
+en dicha figura, a medida que aumenta el número de sujetos la
+distribución se asemeja cada vez más a la de la distribución gaussiana o
+normal.
+
+Ahora bien, si encuestamos a 100 personas, ¿podemos rechazar
+H\textsubscript{0} si 59 responden \emph{nombre}? La respuesta es sí:
+asumiendo H\textsubscript{0}, la probabilidad de que los sujetos
+respondan \emph{nombre} 59 veces o más es de \(p = 0.044\) (véase Figura
+3).
+
+\hypertarget{valores-p-de-dos-colas-en-distribuciones-de-probabilidad-discretas}{%
+\subsection{\texorpdfstring{Valores \emph{p} de dos colas en
+distribuciones de probabilidad
+discretas}{Valores p de dos colas en distribuciones de probabilidad discretas}}\label{valores-p-de-dos-colas-en-distribuciones-de-probabilidad-discretas}}
+
+En la sección anterior, nuestra H\_1\_ era direccional: ``Si una palabra
+puede ser analizada como nombre o como verbo, los sujetos responderán
+\emph{nombre} más frecuentemente''. La prueba de significancia que
+discutimos es una prueba de una cola, porque solo nos interesaba una
+dirección en la que el resultado observado se desviaba del resultado
+esperado. Si, en cambio, asumimos una H\textsubscript{1} no direccional
+(por ejemplo, ``Si una palabra puede ser analizada como nombre o como
+verbo, los hablantes responderán verbo y nombre con distinta
+frecuencia''), tenemos que mirar hacia ambos lados del desvío:
+
+\begin{description}
+\tightlist
+\item[H\textsubscript{0} estadística]
+los sujetos van a responder \emph{nombre} tantas veces como
+\emph{verbo}: \(n_{\textrm{nombre}} = n_{\textrm{verbo}}\).
+\item[H\textsubscript{1} estadística]
+los sujetos van a responder \emph{nombre} en un número distinto de veces
+que \emph{verbo}: \(n_{\textrm{nombre}} \neq n_{\textrm{verbo}}\).
+\end{description}
+
+Ahora imaginemos que, una vez más, de 100 sujetos que responden si
+\emph{camino} es un nombre o un verbo, 59 deciden que es un nombre. Ya
+que nuestra hipótesis es no direccional y queremos calcular la
+probabilidad de que ocurra dicho resultado u otro que se desvíe aún más
+de H\textsubscript{0} cuando H\textsubscript{0} es verdadera, tenemos
+que mirar hacia ambos lados de la distribución (que los sujetos
+respondan que es nombre 59 o más veces y que los sujetos respondan que
+es nombre 41 o menos veces). Así, obtenemos una frecuencia acumulada de
+\(p = 0.089\) (véase Figura 4). Dado que este resultado es mayor al
+\emph{p}\textsubscript{crítico} que definimos, no podemos rechazar
+H\textsubscript{0}.
+
+Cuando tenemos conocimiento previo sobre un fenómeno, podemos formular
+una hipótesis direccional. Esto nos habilita a que el resultado
+necesario para una conclusión significativa sea menos extremo que en el
+caso de una hipótesis no direccional. En la mayoría de los casos, el
+valor \emph{p} que obtenemos para un resultado con una hipótesis
+direccional es la mitad del valor \emph{p} obtenido para una hipótesis
+no direccional.
+
+\hypertarget{ejercitacion-7}{%
+\subsection{Ejercitación}\label{ejercitacion-7}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Completá el siguiente cuadro:
+
+  \begin{longtable}[]{@{}lll@{}}
+  \toprule
+  \begin{minipage}[b]{0.40\columnwidth}\raggedright
+  Valor\strut
+  \end{minipage} & \begin{minipage}[b]{0.36\columnwidth}\raggedright
+  Significancia\strut
+  \end{minipage} & \begin{minipage}[b]{0.15\columnwidth}\raggedright
+  Indicación\strut
+  \end{minipage}\tabularnewline
+  \midrule
+  \endhead
+  \begin{minipage}[t]{0.40\columnwidth}\raggedright
+  \(p < 0.001\)\strut
+  \end{minipage} & \begin{minipage}[t]{0.36\columnwidth}\raggedright
+  \_\_\_\_\_\_\_\_\_\_\_\_\_\strut
+  \end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright
+  ***\strut
+  \end{minipage}\tabularnewline
+  \begin{minipage}[t]{0.40\columnwidth}\raggedright
+  \(0.001 \leq p < 0.01\)\strut
+  \end{minipage} & \begin{minipage}[t]{0.36\columnwidth}\raggedright
+  muy significativo\strut
+  \end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright
+  \_\_\_\_\_\strut
+  \end{minipage}\tabularnewline
+  \begin{minipage}[t]{0.40\columnwidth}\raggedright
+  \(0.01 \leq p <\)\_\_\_\strut
+  \end{minipage} & \begin{minipage}[t]{0.36\columnwidth}\raggedright
+  significativo\strut
+  \end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright
+  *\strut
+  \end{minipage}\tabularnewline
+  \begin{minipage}[t]{0.40\columnwidth}\raggedright
+  \(0.05\)\_\_\_ \(p\) \_\_\_ \(0.1\)\strut
+  \end{minipage} & \begin{minipage}[t]{0.36\columnwidth}\raggedright
+  marginalmente significativo\strut
+  \end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright
+  \emph{ms} o .\strut
+  \end{minipage}\tabularnewline
+  \begin{minipage}[t]{0.40\columnwidth}\raggedright
+  \_\_\_\_\_\_\_\_\_\_\_\_\strut
+  \end{minipage} & \begin{minipage}[t]{0.36\columnwidth}\raggedright
+  \_\_\_\_\_\_\_\_\_\_\_\_\_\strut
+  \end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright
+  \_\_\_\_\_\strut
+  \end{minipage}\tabularnewline
+  \bottomrule
+  \end{longtable}
+\item
+  Un investigador acepta su hipótesis alternativa (que la sonorización
+  de oclusivas sordas en español está influida por el signo zodiacal y
+  el ascendente) y rechaza la nula. No obstante, el corpus de datos
+  presentaba un sesgo importante y, en realidad, tal efecto no existe.
+  ¿Qué tipo de error cometió este investigador?
+\item
+  Se quiere estudiar, el uso de tiempos compuestos en español
+  rioplatense a partir de respuestas a preguntas. Se obtuvieron los
+  siguientes resultados:
+
+  \begin{longtable}[]{@{}llll@{}}
+  \toprule
+  \begin{minipage}[b]{0.06\columnwidth}\raggedright
+  Caso\strut
+  \end{minipage} & \begin{minipage}[b]{0.09\columnwidth}\raggedright
+  Sujeto\strut
+  \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\raggedright
+  Respuesta\strut
+  \end{minipage} & \begin{minipage}[b]{0.09\columnwidth}\raggedright
+  Tiempo\strut
+  \end{minipage}\tabularnewline
+  \midrule
+  \endhead
+  \begin{minipage}[t]{0.06\columnwidth}\raggedright
+  1\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  1\strut
+  \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+  1\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  S\strut
+  \end{minipage}\tabularnewline
+  \begin{minipage}[t]{0.06\columnwidth}\raggedright
+  2\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  1\strut
+  \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+  2\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  S\strut
+  \end{minipage}\tabularnewline
+  \begin{minipage}[t]{0.06\columnwidth}\raggedright
+  3\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  2\strut
+  \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+  3\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  S\strut
+  \end{minipage}\tabularnewline
+  \begin{minipage}[t]{0.06\columnwidth}\raggedright
+  4\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  2\strut
+  \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+  4\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  S\strut
+  \end{minipage}\tabularnewline
+  \begin{minipage}[t]{0.06\columnwidth}\raggedright
+  5\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  3\strut
+  \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+  5\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  C\strut
+  \end{minipage}\tabularnewline
+  \begin{minipage}[t]{0.06\columnwidth}\raggedright
+  6\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  3\strut
+  \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+  6\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  C\strut
+  \end{minipage}\tabularnewline
+  \begin{minipage}[t]{0.06\columnwidth}\raggedright
+  7\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  4\strut
+  \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+  7\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  S\strut
+  \end{minipage}\tabularnewline
+  \begin{minipage}[t]{0.06\columnwidth}\raggedright
+  8\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  4\strut
+  \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+  8\strut
+  \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+  C\strut
+  \end{minipage}\tabularnewline
+  \bottomrule
+  \end{longtable}
+
+  ¿Cuál es la probabilidad de obtener estos datos bajo la hipótesis nula
+  de que no hay diferencias de frecuencia entre el uso de tiempos
+  simples y tiempos compuestos u otros que se desvíen todavía más de
+  esta hipótesis? ¿La probabilidad obtenida es significativa?
+\item
+  Graficá la distribución de probabilidades de la variable aleatoria
+  tiempo simple e indicá en el gráfico dónde se ubican los datos
+  obtenidos.
+\end{enumerate}
+
+\hypertarget{el-reporte}{%
+\section{El reporte}\label{el-reporte}}
+
+Uno de los pilares sobre los que se basa la ciencia es la replicabilidad
+de los resultados de una investigación. Para asegurar que nuestro
+estudio presente esta característica, tenemos que ser tan detallados
+como sea posible.
+
+El \textbf{reporte} de una investigación cuantitativa consiste, por lo
+general, de cuatro partes: \textbf{introducción}, \textbf{métodos},
+\textbf{resultados}, y \textbf{discusión}. Si se discute más de un caso
+de estudio, en el informe, cada caso suele requerir sus propias
+secciones de métodos, resultados y discusión, seguido de una discusión
+general. Entre la información a presentar, tenemos que incluir la
+población estudiada, las hipótesis consideradas y las variables (sin
+dejar de lado su operacionalización), la confección de la muestra (y las
+consideraciones que tuvimos en cuenta para que la misma sea
+representativa y balanceada), la forma en que se almacenaron los datos y
+los distintos pasos del testeo de hipótesis. Por último, es importante
+no olvidar que el objetivo final de toda investigación es la
+comunicación. En este sentido, tenemos que tener en cuenta el poder
+ilustrativo que tienen los gráficos y las tablas para transmitir
+información y, por supuesto, tratar de ser tan claros en las
+explicaciones como sea posible!
+
+\hypertarget{ejercitacion-8}{%
+\subsection{Ejercitación}\label{ejercitacion-8}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Buscá un artículo sobre una investigación experimental que organice su
+  comunicación siguiendo este formato. ¿Qué información incluye cada
+  sección?
+\end{enumerate}
+
+\hypertarget{conclusion}{%
+\section{Conclusión}\label{conclusion}}
+
+En esta clase, discutimos cómo llevar a cabo una investigación
+cuantitativa. Para ello, analizamos las distintas etapas que involucra
+llevar a cabo un estudio siguiendo esta metodología, desde el
+planeamiento hasta la redacción del reporte. Es crucial para obtener
+resultados rigurosos atravesar cada una de las etapas de forma
+responsable y detallada.
+
+
+\end{document}
