@@ -21,4 +21,5 @@ Santiago Gualchi
 ## Compiling
 
 After compiling the R MarkDown file, argument `shorthand=off` must be removed
-from the LaTeX file and recompiled. Otherwise, real numbers are misspelt.
+from babel package in the LaTeX file and recompiled. Otherwise, real numbers
+are misspelt.
