@@ -638,7 +638,7 @@ que la probabilidad de error _p_ es lo suficientemente baja como para aceptar
 H~1~. La probabilidad de error _p_ es conocida como **valor _p_**. El
 [Cuadro 5](#p) recoge la semántica estándar de dicho valor.
 
-<div id="p"> </div>: Semántica de los valores de _p_.
+: <span id="p">Semántica</span> de los valores de _p_.
 
 +-----------------------+-----------------------------+------------+
 | Valor                 | Significancia               | Indicación |
@@ -665,7 +665,7 @@ hacer cuando llevamos a cabo pruebas de testeo de hipótesis. Asimismo, un
 rechaza. Estos errores suelen ser menos graves que los de tipo I, pero, de todos
 modos, debemos reducir la posibilidad de que ocurran.
 
-<div id="errores"> </div>: Errores de tipo I y II.
+: <span id="errores">Errores</span> de tipo I y II.
 
 +--------------+-------------------+-------------------+
 |              | H~0~ es verdadera | H~1~ es verdadera |
@@ -721,7 +721,7 @@ $p > p_{\textrm{crítico}}$ no podemos rechazar H~0~.
       ambas son complementarias : $N = 3 - V$. Definimos dos variables
       aleatorias a modo ilustrativo.
 
-<div id="prob"> </div>: Todos los resultados posibles de pedir a 3 sujetos que
+: <span id="prob">Todos</span> los resultados posibles de pedir a 3 sujetos que
 clasifiquen *camino* como un nombre o un verbo.
 
 +----------+----------+----------+-----+-----+---------------------------+

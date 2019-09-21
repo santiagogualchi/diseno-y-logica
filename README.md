@@ -28,4 +28,4 @@ are misspelt.
 
 This document is released under CC Attribution-NonCommercial 4.0 International.
 For more information see [LICENSE](LICENSE) or access
-[the online version](https://creativecommons.org/licenses/by-nc/4.0/).
+[the online version](https://creativecommons.org/licenses/by-nc/4.0/legalcode).
