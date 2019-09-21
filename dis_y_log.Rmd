@@ -50,7 +50,7 @@ para lo cual vamos a profundizar algunos de los conceptos que ya introdujimos.
 Vamos a centrarnos en las hipótesis y variables, y a estudiar sus propiedades y
 las repercusiones que traen las distintas formas de operacionalizarlas. Vamos a
 explicar cómo recolectar los datos de forma rigurosa y cuáles son los buenos
-hábitos para su almacenamiento. Por último, vamos a introducir la forma de
+hábitos para su almacenamiento. Por último, vamos a introducir una forma de
 proceder para la aceptación (o no) de nuestras hipótesis y por qué se realiza de
 este modo.
 
@@ -74,7 +74,7 @@ matemáticas. Por esta razón, hoy resulta prácticamente imprescindible hacer u
 de un software de análisis estadístico (e.g., SPSS, SAS, Stata) o, mejor
 todavía, un lenguaje de programación con buen soporte estadístico (e.g., R,
 Python, Julia). Para mantener el espacio de trabajo organizado, facilitar la
-comprensión y reproducibilidad y evitar errores prevenibles, es importante
+comprensión y reproducibilidad, y evitar errores prevenibles, es importante
 mantener una buena estructuración de nuestro directorio. Existen distintas
 prácticas sugeridas. A continuación voy a resumir las
 [recomendaciones desarrolladas por DrivenData](https://drivendata.github.io/cookiecutter-data-science/)
@@ -86,13 +86,12 @@ El archivo README
   variantes cuando descargamos algunos contenidos de internet. El archivo
   README es uno de los más importantes de cualquier proyecto. Como su nombre
   sugiere es el primer lugar por el que se accede al contenido. Un buen 
-  archivo README resume la información esencial que el desarrollador
-  considera que el usuario debe conocer al hacer uso de su solución, y es el
-  primer archivo que el usuario debe consultar cuando accede a un proyecto. Los
-  archivos README suelen estar escritos en texto plano (sin ningún tipo de
-  formato) o usando algún lenguaje de marcado (por lo general, MarkDown). Es
-  fundamental que todo proyecto que encaremos cuente con un buen archivo README!
-  Pueden ver un ejemplo de
+  archivo README resume la información esencial que el usuario debe conocer al
+  hacer uso de esa solución, y es el primer archivo que el usuario debe
+  consultar cuando accede a un proyecto. Los archivos README suelen estar
+  escritos en texto plano (sin ningún tipo de formato) o usando algún lenguaje
+  de marcado (por lo general, MarkDown). Es fundamental que todo proyecto que
+  encaremos cuente con un buen archivo README! Pueden ver un ejemplo de
   [una buena plantilla de README](https://github.com/sfbrigade/data-science-wg/blob/master/dswg_project_resources/Project-README-template.md)
   para proyectos en Data Science en el sitio de Code for San Francisco.
 
@@ -128,11 +127,10 @@ El directorio notebooks
   aprovechar su versatilidad para correr análisis exploratorios.
 
 El directorio src
-  ~ En esta carpeta va a estar contenido todo el código que escribamos para
-  llevar a cabo nuestra análisis, como el que se ocupa de descargar, generar o
-  limpiar los datos, definir y entrenar los modelos, o crear visualizaciones. La
-  única excepción es que vamos a incluir código que usa el que está contenido en
-  este directorio en las notebooks.
+  ~ En esta carpeta va a estar contenido todo el código (excepto el que usemos
+  en las notebooks) que escribamos para   llevar a cabo nuestro análisis, como
+  el que se ocupa de descargar, generar o limpiar los datos, definir y entrenar
+  los modelos, o crear visualizaciones.
 
 Esta es una simplificación de la propuesta, la estructura completa de directorio
 incluye archivos y carpetas específicos para Python, además de otros
@@ -311,7 +309,7 @@ Las primeras se caracterizan por ser:
 
  * enunciados generales ocupados de más de un evento singular;
  * enunciados con una estructura condicional (*si..., entonces...*), o que, al
-   menos, puede ser parafraseados como tal; y
+   menos, puede ser parafraseados como tales; y
  * potencialmente **falsables** (i.e., se pueden pensar eventos o situaciones
    que contradigan al enunciado) y **testeables** (i.e., se pueden realizar
    pruebas que determinen la verdad o falsedad del enunciado).
@@ -384,7 +382,7 @@ posibles. Por ejemplo:
    (H~0~ correspondiente a la [hipótesis de tipo 2](#h2)).
 
 Ahora bien, en algunas investigaciones es posible suponer que los efectos
-o relaciones entre variables ocurran en una dirección determinada (se desvíen
+o relaciones entre variables ocurran en una dirección determinada (se desvían
 de la H~0~ hacia *un* lado). En estos casos, se dice que se establece una
 **hipótesis direccional**. Por el contrario, las **hipótesis no direccionales**
 solo predicen que existe un efecto o relación sin especificar la dirección del
@@ -715,11 +713,11 @@ cada combinación es igualmente probable, dividir 1 por el total de elementos en
 el espacio muestral: $1 \div 8 = 0.125$. Otra posibilidad consiste en calcular
 el producto de las probabilidades de las 3 respuestas correspondientes a la
 combinación: $0.5 \times 0.5 \times 0.5 = 0.125$. Dado que, bajo H~0~, la
-probabilidad de que los 3 sujetos respondan nombre es de $p = 0.125$ y que
+probabilidad de que los 3 sujetos respondan *nombre* es de $p = 0.125$ y que
 $p > p_{\textrm{crítico}}$ no podemos rechazar H~0~.
 
 [^3]: En este caso, solo es necesario definir una variable aleatoria, ya que
-      ambas son complementarias : $N = 3 - V$. Definimos dos variables
+      ambas son complementarias: $N = 3 - V$. Definimos dos variables
       aleatorias a modo ilustrativo.
 
 : <span id="prob">Todos</span> los resultados posibles de pedir a 3 sujetos que
@@ -746,9 +744,9 @@ clasifiquen *camino* como un nombre o un verbo.
 +----------+----------+----------+-----+-----+---------------------------+
 
 La distribución de probabilidad de cada resultado posible para 3 sujetos queda
-recogida en el primer histograma [Figura 1](#dists). Como se observa en dicha
-figura, a medida que aumenta el número de sujetos la distribución se asemeja
-cada vez más a la de la distribución gaussiana o normal.
+recogida en el primer diagrama de barras de la [Figura 1](#dists). Como se
+observa en dicha figura, a medida que aumenta el número de sujetos la
+distribución se asemeja cada vez más a la de la distribución gaussiana o normal.
 
 ```{R, include = FALSE}
 library(tidyverse)
