@@ -10,6 +10,7 @@ numbersections: true
 output:
   pdf_document:
     keep_tex: true
+    fig_caption: true
 ---
 
 # Introducción
@@ -745,18 +746,125 @@ clasifiquen *camino* como un nombre o un verbo.
 +----------+----------+----------+-----+-----+---------------------------+
 
 La distribución de probabilidad de cada resultado posible para 3 sujetos queda
-recogida en el primer histograma de la Figura 1. Como se observa en dicha
+recogida en el primer histograma [Figura 1](#dists). Como se observa en dicha
 figura, a medida que aumenta el número de sujetos la distribución se asemeja
 cada vez más a la de la distribución gaussiana o normal.
 
+```{R, include = FALSE}
+library(tidyverse)
+```
+
+```{R, include = FALSE}
+subj3 = tibble(n = 0:3, `\np` = dbinom(0:3, 3, 0.5))
+subj6 = tibble(n = 0:6, p = dbinom(0:6, 6, 0.5))
+subj11 = tibble(n = 0:11, p = dbinom(0:11, 11, 0.5))
+subj25 = tibble(n = 0:25, `\np` = dbinom(0:25, 25, 0.5))
+subj50 = tibble(n = 0:50, `\np` = dbinom(0:50, 50, 0.5))
+subj100 = tibble(n = 0:100, `\np` = dbinom(0:100, 100, 0.5))
+```
+
+```{R, include = FALSE}
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+```
+
+```{R, lab, echo = FALSE, fig.cap = "<span id=\"dists\">Distribución</span> de probabilidad para resultados de 3, 6, 12, 25, 50 y 100 intentos binarios igualmente probables."}
+s3p <- ggplot(data = subj3, aes(n, `\np`)) +
+  geom_bar(stat = "identity",  color = "black", fill = "white") +
+  coord_cartesian(ylim=c(0,0.4)) +
+  theme_minimal()
+
+s6p <- ggplot(data = subj6, aes(n, p)) +
+  geom_bar(stat = "identity",  color = "black", fill = "white") +
+  coord_cartesian(ylim=c(0,0.4)) +
+  theme_minimal()
+
+s11p <- ggplot(data = subj11, aes(n, p)) +
+  geom_bar(stat = "identity",  color = "black", fill = "white") +
+  coord_cartesian(ylim=c(0,0.4)) +
+  theme_minimal()
+
+s25p <- ggplot(data = subj25, aes(n, `\np`)) +
+  geom_bar(stat = "identity",  color = "black", fill = "white") +
+  coord_cartesian(ylim=c(0,0.4)) +
+  theme_minimal()
+
+s50p <- ggplot(data = subj50, aes(n, `\np`)) +
+  geom_bar(stat = "identity",  color = "black", fill = "white") +
+  coord_cartesian(ylim=c(0,0.4)) +
+  theme_minimal()
+
+s100p <- ggplot(data = subj100, aes(n, `\np`)) +
+  geom_bar(stat = "identity",  color = "black", fill = "white") +
+  coord_cartesian(xlim=c(0, 101), ylim=c(0,0.4)) +
+  theme_minimal()
+
+multiplot(s3p, s25p, s6p, s50p, s11p, s100p, cols = 3)
+```
+
 Ahora bien, si encuestamos a 100 personas, ¿podemos rechazar H~0~ si 59
 responden *nombre*? La respuesta es sí: asumiendo H~0~, la probabilidad de que
-los sujetos respondan *nombre* 59 veces o más es de $p = 0.044$ (véase Figura
-3).
+los sujetos respondan *nombre* 59 veces o más es de $p = 0.044$ (véase
+[Figura 2](#negro)).
+
+```{R, echo = FALSE, fig.height = 2, fig.cap = "<span id=\"negro\">En</span> negro, probabilidad de obtener 59 respuestas o más que clasifican camino como un nombre."}
+
+ggplot(data = subj100, aes(n, `\np`)) +
+  geom_bar(
+    stat = "identity",
+    color = "black",
+    fill = c(rep("white", 59), rep("black", 42))
+    ) +
+  theme_minimal()
+
+```
 
 ## Valores _p_ de dos colas en distribuciones de probabilidad discretas
 
-En la sección anterior, nuestra H_1_ era direccional: “Si una palabra puede ser
+En la sección anterior, nuestra H~1~ era direccional: “Si una palabra puede ser
 analizada como nombre o como verbo, los sujetos responderán *nombre* más
 frecuentemente”. La prueba de significancia que discutimos es una prueba de
 una cola, porque solo nos interesaba una dirección en la que el resultado
@@ -779,9 +887,22 @@ es no direccional y queremos calcular la probabilidad de que ocurra dicho
 resultado u otro que se desvíe aún más de H~0~ cuando H~0~ es verdadera, tenemos
 que mirar hacia ambos lados de la distribución (que los sujetos respondan que es
 nombre 59 o más veces y que los sujetos respondan que es nombre 41 o menos
-veces). Así, obtenemos una frecuencia acumulada de $p = 0.089$ (véase Figura 4).
+veces). Así, obtenemos una frecuencia acumulada de $p = 0.089$ (véase
+[Figura 3](#negro2)).
 Dado que este resultado es mayor al _p_~crítico~ que definimos, no podemos
 rechazar H~0~.
+
+```{R, echo = FALSE, fig.height = 2, fig.cap = "<span id=\"negro2\">En</span> En negro, probabilidad de obtener 41 respuestas o menos y 59 respuestas o más que clasifican camino como un nombre."}
+
+ggplot(data = subj100, aes(n, `\np`)) +
+  geom_bar(
+    stat = "identity",
+    color = "black",
+    fill = c(rep("black", 42), rep("white", 17), rep("black", 42))
+    ) +
+  theme_minimal()
+
+```
 
 Cuando tenemos conocimiento previo sobre un fenómeno, podemos formular una
 hipótesis direccional. Esto nos habilita a que el resultado necesario para

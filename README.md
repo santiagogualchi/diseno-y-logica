@@ -15,8 +15,6 @@ Santiago Gualchi
 
  * Include references (meanwhile, this guide is mainly based on Gries [2013]'s
    first chapter)
- * Include graphics
- * Include images
 
 ## Compiling
 
